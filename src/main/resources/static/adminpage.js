@@ -1,19 +1,16 @@
 $(document).ready(function () {
     getAllUsers();
 });
-
+const URL = "http://localhost:8080/admin/users";
 let roles = [
     {name: "ROLE_ADMIN", authority: "ROLE_ADMIN", id: 1},
     {name: "ROLE_USER", authority: "ROLE_USER", id: 2}
 ];
-let rolesList;
-
-
 
 function getAllUsers() {
     const usersTable = $('#usertbody');
     usersTable.empty()
-    fetch("http://localhost:8080/admin/users")
+    fetch(URL)
         .then(response => response.json())
         .then(users => {
             users.forEach(user => {
@@ -52,7 +49,7 @@ function addUser() {
             surname: $(`[name="surname"]`, newUserForm).val(),
             roles: getRole(newUserForm)
         })
-        fetch("http://localhost:8080/admin/users", {
+        fetch(URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +80,7 @@ function openEditModal(id) {
             surname: $(`[name="surname"]`, form).val(),
             roles: getRole(form)
         })
-        fetch("http://localhost:8080/admin/users", {
+        fetch(URL, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +106,7 @@ function openDeleteModal(id) {
     form.onsubmit = function (event) {
         event.preventDefault()
         event.stopPropagation()
-        fetch("http://localhost:8080/admin/users?" + params.toString(), {
+        fetch(URL+"?" + params.toString(), {
             method: 'DELETE',
         }).then(r => {
             form.reset()
