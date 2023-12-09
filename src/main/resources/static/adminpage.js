@@ -1,7 +1,7 @@
 $(document).ready(function () {
     getAllUsers();
 });
-const URL = "http://localhost:8080/admin/users";
+
 let roles = [
     {name: "ROLE_ADMIN", authority: "ROLE_ADMIN", id: 1},
     {name: "ROLE_USER", authority: "ROLE_USER", id: 2}
@@ -10,7 +10,7 @@ let roles = [
 function getAllUsers() {
     const usersTable = $('#usertbody');
     usersTable.empty()
-    fetch(URL)
+    fetch(adminApiURL)
         .then(response => response.json())
         .then(users => {
             users.forEach(user => {
@@ -49,7 +49,7 @@ function addUser() {
             surname: $(`[name="surname"]`, newUserForm).val(),
             roles: getRole(newUserForm)
         })
-        fetch(URL, {
+        fetch(adminApiURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ function openEditModal(id) {
             surname: $(`[name="surname"]`, form).val(),
             roles: getRole(form)
         })
-        fetch(URL, {
+        fetch(adminApiURL, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -100,13 +100,13 @@ function openEditModal(id) {
 function openDeleteModal(id) {
     let modal = new bootstrap.Modal($('#deletemodal'));
     let form = $('#deletemodalform')[0];
-    let params = new URLSearchParams();
+    let params = new adminApiURLSearchParams();
     params.append("id",id);
     openModal(modal,form,id);
     form.onsubmit = function (event) {
         event.preventDefault()
         event.stopPropagation()
-        fetch(URL+"?" + params.toString(), {
+        fetch(adminApiURL+"?" + params.toString(), {
             method: 'DELETE',
         }).then(r => {
             form.reset()
@@ -120,9 +120,9 @@ function openDeleteModal(id) {
     }
 }
 function openModal(modal, form, id) {
-    let idparam = new URLSearchParams()
+    let idparam = new adminApiURLSearchParams()
     idparam.append("id", id);
-    fetch("http://localhost:8080/admin/user?" + idparam.toString())
+    fetch(adminApiURL+"?" + idparam.toString())
         .then(response =>
             response.json()).then(user => {
         $(`[name="id"]`, form).val(user.id),

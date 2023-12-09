@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ModelMap;
@@ -12,8 +13,10 @@ import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserRestController {
@@ -21,6 +24,8 @@ public class UserRestController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Value("${fetch.url}")
+    private String URL;
 
 
     @GetMapping(value = "/admin")
@@ -29,8 +34,10 @@ public class UserRestController {
     ) {
         ModelAndView admin = new ModelAndView("userlist");
         model.addAttribute("logged_user", userService.getByUsername(principal.getName()));
+        model.addAttribute("adminApiURL",URL);
         return admin;
     }
+
     @GetMapping(value = "/user")
     public  ModelAndView user(ModelMap model, Principal principal) {
         ModelAndView user = new ModelAndView("user");
